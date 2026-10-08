@@ -47,23 +47,23 @@ class Settings(BaseSettings):
     )
 
     @property
-    def demo_mode(self) -> bool:
-        """True quando não há chave da OpenAI: o Chip responde com texto simulado."""
-        return not self.openai_api_key.strip()
-
-    @property
     def effective_database_url(self) -> str:
         """Resolve a URL do banco.
 
         - Sem DATABASE_URL: SQLite local para desenvolvimento.
-        - Com DATABASE_URL no formato antigo "postgres://" (comum no Render):
-          converte para "postgresql://", que é o que o SQLAlchemy entende.
+        - Com DATABASE_URL do PostgreSQL ("postgres://" ou "postgresql://"):
+          força o driver psycopg2 ("postgresql+psycopg2://").
+          Motivo: no SQLAlchemy 2.1 o driver padrão virou o "psycopg" (v3),
+          mas o projeto instala o psycopg2-binary. Sem isso o Render dá
+          "ModuleNotFoundError: No module named 'psycopg'".
         """
         url = self.database_url.strip()
         if not url:
             return f"sqlite:///{BASE_DIR / 'performanceai.db'}"
         if url.startswith("postgres://"):
-            url = url.replace("postgres://", "postgresql://", 1)
+            url = url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
         return url
 
 
