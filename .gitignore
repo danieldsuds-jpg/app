@@ -1,0 +1,20 @@
+# Segredos — nunca versionar
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Banco local de desenvolvimento (SQLite)
+*.db
+*.sqlite3
+
+# Sistema / editor
+.DS_Store
+.vscode/
+.idea/

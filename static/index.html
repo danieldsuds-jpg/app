@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B1B3A">
+  <meta name="description" content="PerformanceAI — o Chip ajuda a deixar seu PC mais rápido sem trocar tudo.">
+  <title>PerformanceAI — Mais rápido. Sem trocar tudo.</title>
+
+  <!-- Favicons (copiados de /branding) -->
+  <link rel="icon" href="/static/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon_32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/static/img/favicon_192.png">
+
+  <!-- Fontes da identidade visual: Poppins (títulos) e Inter (interface) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- =====================================================================
+       TELA 1: LANDING + LOGIN/CADASTRO (visível quando não há sessão)
+       ===================================================================== -->
+  <section id="view-auth" class="view">
+    <header class="hero">
+      <img src="/static/img/logo_horizontal_dark.png" alt="PerformanceAI" class="hero__logo">
+      <h1 class="hero__title">Mais rápido. <span>Sem trocar tudo.</span></h1>
+      <p class="hero__sub">
+        Converse com o <strong>Chip</strong>, o assistente de IA que entende a configuração do
+        seu computador e explica, passo a passo, o que fazer para ele ficar mais rápido —
+        sem acesso remoto e começando sempre pelas ações gratuitas e seguras.
+      </p>
+      <ul class="hero__points">
+        <li>Diagnóstico pela configuração que você informa</li>
+        <li>Cada dica explica <em>por que</em> serve ao seu PC</li>
+        <li>Primeiro o que é grátis; upgrade só se valer a pena</li>
+      </ul>
+    </header>
+
+    <div class="card auth-card">
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" data-tab="login" role="tab">Entrar</button>
+        <button class="tab" data-tab="register" role="tab">Criar conta</button>
+      </div>
+
+      <form id="form-login" class="form">
+        <label>E-mail
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label>Senha
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" class="btn btn--primary">Entrar</button>
+      </form>
+
+      <form id="form-register" class="form is-hidden">
+        <label>E-mail
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label>Senha <small>(mínimo 8 caracteres)</small>
+          <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <button type="submit" class="btn btn--primary">Criar conta gratuita</button>
+        <p class="form__hint">Plano Gratuito: 20 mensagens por mês com o Chip, sem cartão.</p>
+      </form>
+
+      <p id="auth-error" class="error" role="alert"></p>
+    </div>
+
+    <section class="plans">
+      <h2>Planos</h2>
+      <div class="plans__grid">
+        <article class="plan">
+          <h3>Gratuito</h3>
+          <p class="plan__price">R$ 0</p>
+          <ul>
+            <li>20 mensagens por mês com o Chip</li>
+            <li>Diagnóstico e otimizações nativas do sistema</li>
+            <li>Apps seguros recomendados e alerta de "placebos"</li>
+            <li>Conteúdo educativo (BIOS, HDD vs SSD, Linux)</li>
+            <li>Histórico de conversas</li>
+          </ul>
+        </article>
+        <article class="plan plan--premium">
+          <span class="badge">Em breve</span>
+          <h3>Premium</h3>
+          <p class="plan__price">R$ 24,90<small>/mês</small></p>
+          <p class="plan__promo">Promoção de lançamento: R$ 19,90/mês</p>
+          <ul>
+            <li>Mensagens ilimitadas</li>
+            <li>Chip com memória da sua máquina e do histórico</li>
+            <li>Guia de BIOS/UEFI com a lista aprovada e alertas de segurança</li>
+            <li>Termo de aceite antes de guias avançados</li>
+          </ul>
+        </article>
+      </div>
+      <p class="plans__note">Sem atendimento humano: o Chip orienta e, quando necessário, recomenda procurar um técnico.</p>
+    </section>
+
+    <footer class="footer">
+      <small>PerformanceAI · Sprint 2 (MVP) · O Chip não acessa seu computador. Faça backup antes de alterar o sistema.</small>
+    </footer>
+  </section>
+
+  <!-- =====================================================================
+       TELA 2: APP (dashboard + chat) — visível após login
+       ===================================================================== -->
+  <section id="view-app" class="view is-hidden">
+    <header class="topbar">
+      <button id="btn-menu" class="iconbtn" aria-label="Abrir menu">☰</button>
+      <img src="/static/img/logo_horizontal_dark.png" alt="PerformanceAI" class="topbar__logo">
+      <span id="usage-pill" class="pill" title="Mensagens usadas no mês">—</span>
+      <button id="btn-logout" class="iconbtn" aria-label="Sair" title="Sair">⎋</button>
+    </header>
+
+    <div class="layout">
+      <!-- Barra lateral: máquinas e conversas -->
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar__section">
+          <div class="sidebar__head">
+            <h2>Meus PCs</h2>
+            <button id="btn-new-machine" class="btn btn--small">+ PC</button>
+          </div>
+          <ul id="machine-list" class="list"></ul>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__head">
+            <h2>Conversas</h2>
+            <button id="btn-new-conv" class="btn btn--small btn--primary">+ Nova</button>
+          </div>
+          <ul id="conv-list" class="list"></ul>
+        </div>
+
+        <div class="sidebar__section sidebar__plan">
+          <p id="plan-label">Plano Gratuito</p>
+          <p id="plan-usage" class="muted"></p>
+          <button id="btn-premium" class="btn btn--outline btn--small">Conhecer o Premium</button>
+        </div>
+      </aside>
+      <div id="sidebar-backdrop" class="backdrop"></div>
+
+      <!-- Área do chat -->
+      <main class="chat">
+        <div id="demo-banner" class="banner is-hidden">
+          Modo demonstração: a chave da OpenAI não está configurada, então o Chip responde com texto simulado.
+        </div>
+
+        <div id="chat-empty" class="chat__empty">
+          <img src="/static/img/logo_icon.png" alt="" class="chat__avatar-big">
+          <h2>Olá! Eu sou o Chip.</h2>
+          <p>Cadastre seu PC em <strong>Meus PCs</strong> (opcional, mas ajuda muito) e clique em
+            <strong>+ Nova</strong> para começar. Vou perguntar o que faltar e explicar por que
+            cada dica serve à sua máquina.</p>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <div id="limit-box" class="limit is-hidden">
+          <h3>Limite do plano Gratuito atingido</h3>
+          <p id="limit-text"></p>
+          <p class="limit__offer">
+            Premium: <strong>R$ 24,90/mês</strong> — promoção de lançamento <strong>R$ 19,90/mês</strong>.
+            Mensagens ilimitadas e guia de BIOS com a lista aprovada. <em>Em breve.</em>
+          </p>
+        </div>
+
+        <form id="form-chat" class="composer">
+          <textarea id="chat-input" rows="1" placeholder="Descreva o problema do seu PC…" maxlength="4000" required></textarea>
+          <button type="submit" id="btn-send" class="btn btn--primary">Enviar</button>
+        </form>
+        <p class="composer__hint">O Chip pode errar. Faça backup antes de alterar o sistema; para suspeita de defeito físico, procure um técnico.</p>
+      </main>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MODAL: cadastro/edição de PC (perfil da máquina — Seção 2.3)
+       ===================================================================== -->
+  <div id="modal-machine" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="modal-machine-title">
+    <div class="modal__box">
+      <h2 id="modal-machine-title">Perfil do PC</h2>
+      <p class="muted">Preencha o que souber. Tudo é opcional, menos o nome.</p>
+      <form id="form-machine" class="form form--grid">
+        <input type="hidden" name="id">
+        <label class="span2">Nome <input name="name" placeholder="Ex.: Meu notebook" maxlength="80" required></label>
+        <label>Sistema operacional
+          <select name="os">
+            <option value="">Não sei</option>
+            <option>Windows 11</option>
+            <option>Windows 10</option>
+            <option>Windows 8.1 ou anterior</option>
+            <option>macOS</option>
+            <option>Linux (Ubuntu)</option>
+            <option>Linux (Mint)</option>
+            <option>Linux (Zorin OS)</option>
+            <option>Linux (outra distribuição)</option>
+          </select>
+        </label>
+        <label>Processador (CPU) <input name="cpu" placeholder="Ex.: Intel Core i5-7200U" maxlength="120"></label>
+        <label>Memória RAM (GB)
+          <select name="ram_gb">
+            <option value="">Não sei</option>
+            <option>2</option><option>4</option><option>6</option><option>8</option>
+            <option>12</option><option>16</option><option>32</option><option>64</option>
+          </select>
+        </label>
+        <label>Armazenamento <input name="storage" placeholder="Ex.: HDD 1 TB / SSD 240 GB" maxlength="120"></label>
+        <label>Placa de vídeo (GPU) <input name="gpu" placeholder="Ex.: integrada Intel / GTX 1050" maxlength="120"></label>
+        <label>Idade do PC
+          <select name="age">
+            <option value="">Não sei</option>
+            <option>Menos de 2 anos</option>
+            <option>2 a 5 anos</option>
+            <option>5 a 10 anos</option>
+            <option>Mais de 10 anos</option>
+          </select>
+        </label>
+        <label class="span2">Uso principal
+          <select name="main_use">
+            <option value="">Selecione</option>
+            <option>Navegação e redes sociais</option>
+            <option>Escritório / trabalho remoto</option>
+            <option>Estudo</option>
+            <option>Edição de foto/vídeo</option>
+            <option>Jogos</option>
+            <option>Programação</option>
+            <option>Pequeno negócio (caixa, estoque)</option>
+            <option>Outro</option>
+          </select>
+        </label>
+        <label class="span2">Sintomas <textarea name="symptoms" rows="2" placeholder="Ex.: demora para ligar, trava com várias abas" maxlength="500"></textarea></label>
+        <div class="modal__actions span2">
+          <button type="button" id="btn-machine-delete" class="btn btn--danger is-hidden">Excluir</button>
+          <button type="button" id="btn-machine-cancel" class="btn btn--outline">Cancelar</button>
+          <button type="submit" class="btn btn--primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL: vitrine do Premium (sem pagamento nesta sprint)
+       ===================================================================== -->
+  <div id="modal-premium" class="modal is-hidden" role="dialog" aria-modal="true">
+    <div class="modal__box">
+      <span class="badge">Em breve</span>
+      <h2>PerformanceAI Premium</h2>
+      <p class="plan__price">R$ 24,90<small>/mês</small></p>
+      <p class="plan__promo">Promoção de lançamento: R$ 19,90/mês</p>
+      <ul class="checklist">
+        <li>Mensagens ilimitadas com o Chip</li>
+        <li>Chip lembra a configuração e o histórico da sua máquina</li>
+        <li>Guia de BIOS/UEFI apenas da lista aprovada: TPM/Secure Boot, Resizable BAR, ventoinhas, ordem de boot, virtualização, XMP/EXPO e atualização de firmware — sempre com alertas e termo de aceite</li>
+        <li>Nunca: overclock, ajuste de tensões ou troca AHCI/RAID</li>
+      </ul>
+      <p class="muted">O pagamento ainda não está disponível nesta versão. Continue usando o plano Gratuito; avisaremos quando o Premium abrir.</p>
+      <div class="modal__actions">
+        <button type="button" id="btn-premium-close" class="btn btn--primary">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast is-hidden" role="status"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

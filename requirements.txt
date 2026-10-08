@@ -1,0 +1,14 @@
+# Dependências do PerformanceAI (backend FastAPI)
+# Instale com: pip install -r requirements.txt
+fastapi==0.142.4            # Framework web (API REST + serve o frontend)
+uvicorn[standard]==0.54.0   # Servidor ASGI que executa o FastAPI
+sqlalchemy==2.1.4           # ORM: conversa com o banco (PostgreSQL ou SQLite)
+psycopg2-binary==2.9.13     # Driver do PostgreSQL (usado no Render)
+pydantic[email]==2.13.5     # Validação de dados de entrada (inclui validação de e-mail)
+pydantic-settings==2.15.0   # Leitura das variáveis de ambiente (.env)
+bcrypt==4.2.0               # Hash seguro de senhas
+PyJWT==2.15.1               # Tokens de sessão (JWT)
+openai==2.54.0              # Cliente oficial da OpenAI
+python-dotenv==1.2.4        # Carrega o arquivo .env em desenvolvimento
+httpx==0.28.1               # Cliente HTTP (usado pelos testes e pela OpenAI)
+pytest==9.1.1               # Testes automatizados
