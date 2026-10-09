@@ -47,6 +47,11 @@ class Settings(BaseSettings):
     )
 
     @property
+    def demo_mode(self) -> bool:
+        """True quando não há chave da OpenAI: o Chip responde com texto simulado."""
+        return not self.openai_api_key.strip()
+
+    @property
     def effective_database_url(self) -> str:
         """Resolve a URL do banco.
 
